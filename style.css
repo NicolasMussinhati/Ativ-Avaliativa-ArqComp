@@ -31,9 +31,17 @@ body {
     font-size: 0.95rem;
 }
 
+.layout-principal {
+    width: 100%;
+    max-width: 1240px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 20px;
+    align-items: start;
+}
+
 .container {
     width: 100%;
-    max-width: 1040px;
 }
 
 .painel-controle {
@@ -59,7 +67,8 @@ body {
     color: #38bdf8;
 }
 
-#btn-reiniciar {
+#btn-reiniciar,
+#btn-jogar-novamente {
     background-color: #38bdf8;
     color: #0f172a;
     border: none;
@@ -70,8 +79,13 @@ body {
     transition: background-color 0.2s;
 }
 
-#btn-reiniciar:hover {
+#btn-reiniciar:hover,
+#btn-jogar-novamente:hover {
     background-color: #7dd3fc;
+}
+
+.oculto {
+    display: none !important;
 }
 
 /* Painel de explicação com expansão guiada */
@@ -95,13 +109,6 @@ body {
         max-height 0.45s ease,
         padding 0.35s ease,
         margin-bottom 0.35s ease;
-}
-
-.explicacao-box.oculto {
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-bottom: 0;
-    border-width: 0;
 }
 
 .explicacao-box.expandido {
@@ -154,6 +161,180 @@ body {
     line-height: 1.45;
 }
 
+/* Sumário de desempenho ao fim do jogo */
+.resumo-box {
+    background-color: #1e293b;
+    border: 1px solid #38bdf8;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.45);
+}
+
+.resumo-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.resumo-cabecalho h2 {
+    font-size: 1.15rem;
+    color: #f8fafc;
+}
+
+.selo-desempenho {
+    background-color: #0284c7;
+    color: #f0f9ff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.resumo-metricas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.metrica-card {
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metrica-rotulo {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.metrica-card strong {
+    font-size: 1.15rem;
+    color: #38bdf8;
+}
+
+.resumo-feedback {
+    background-color: #0f172a;
+    border-left: 4px solid #38bdf8;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+}
+
+.resumo-feedback h3 {
+    font-size: 0.95rem;
+    color: #7dd3fc;
+    margin-bottom: 4px;
+}
+
+.resumo-feedback p {
+    font-size: 0.92rem;
+    color: #e2e8f0;
+    line-height: 1.45;
+}
+
+/* Menu lateral */
+.menu-lateral {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px;
+    position: sticky;
+    top: 20px;
+}
+
+.menu-lateral-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.menu-lateral-topo h2 {
+    font-size: 1.05rem;
+    color: #38bdf8;
+}
+
+#contador-lateral {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    background-color: #064e3b;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.menu-lateral-dica {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin-bottom: 12px;
+}
+
+.lista-conceitos {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 460px;
+    overflow-y: auto;
+}
+
+.lista-vazia {
+    font-size: 0.88rem;
+    color: #64748b;
+    padding: 10px;
+    border: 1px dashed #334155;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.item-conceito {
+    width: 100%;
+    text-align: left;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-conceito:hover {
+    border-color: #38bdf8;
+    background-color: #172554;
+}
+
+.item-conceito.ativo {
+    border-color: #34d399;
+    background-color: #064e3b;
+}
+
+.item-conceito span {
+    font-weight: 700;
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+.item-conceito small {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+/* Tabuleiro */
 .tabuleiro {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -223,7 +404,6 @@ body {
     word-break: break-word;
 }
 
-/* Destaque de expansão ao acertar o par */
 .carta.par-destaque {
     z-index: 5;
     transform: scale(1.08) translateY(-6px);
@@ -233,6 +413,16 @@ body {
 .carta.encontrada .carta-verso {
     background-color: #065f46;
     border-color: #34d399;
+}
+
+@media (max-width: 1024px) {
+    .layout-principal {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-lateral {
+        position: static;
+    }
 }
 
 @media (max-width: 900px) {
@@ -245,7 +435,12 @@ body {
     .tabuleiro {
         grid-template-columns: repeat(3, 1fr);
     }
+
     .carta {
         height: 110px;
+    }
+
+    .resumo-metricas {
+        grid-template-columns: 1fr;
     }
 }
