@@ -83,10 +83,23 @@ const explicacaoConceito = document.getElementById("explicacao-conceito");
 const explicacaoTexto = document.getElementById("explicacao-texto");
 const btnReiniciar = document.getElementById("btn-reiniciar");
 
+const listaConceitos = document.getElementById("lista-conceitos");
+const contadorLateral = document.getElementById("contador-lateral");
+
+const painelResumo = document.getElementById("painel-resumo");
+const resumoSelo = document.getElementById("resumo-selo");
+const resumoAcertos = document.getElementById("resumo-acertos");
+const resumoTentativas = document.getElementById("resumo-tentativas");
+const resumoPrecisao = document.getElementById("resumo-precisao");
+const feedbackTitulo = document.getElementById("feedback-titulo");
+const feedbackTexto = document.getElementById("feedback-texto");
+const btnJogarNovamente = document.getElementById("btn-jogar-novamente");
+
 let cartasViradas = [];
 let bloqueioTabuleiro = false;
 let acertos = 0;
 let tentativas = 0;
+let paresDesbloqueados = [];
 
 function embaralhar(lista) {
     for (let i = lista.length - 1; i > 0; i--) {
@@ -122,44 +135,117 @@ function criarBaralho() {
 function atualizarPlacar() {
     contadorAcertos.textContent = `${acertos} de ${paresTermos.length} pares`;
     contadorTentativas.textContent = tentativas;
+    contadorLateral.textContent = `${acertos}/${paresTermos.length}`;
 }
 
-function expandirExplicacaoGuiada(primeira, segunda) {
-    const { termo, conceito, explicacao } = primeira.dataset;
+function marcarItemAtivoNoMenu(termoAtivo) {
+    const botoes = listaConceitos.querySelectorAll(".item-conceito");
+    botoes.forEach((btn) => {
+        btn.classList.toggle("ativo", btn.dataset.termo === termoAtivo);
+    });
+}
 
-    // 1. Expande as duas cartas do par encontrado
-    primeira.classList.add("par-destaque");
-    segunda.classList.add("par-destaque");
+function adicionarNoMenuLateral(item) {
+    if (paresDesbloqueados.some((p) => p.id === item.id)) return;
+    paresDesbloqueados.push(item);
 
-    // 2. Define origem da expansão próxima ao ponto médio entre as duas cartas
-    const rect1 = primeira.getBoundingClientRect();
-    const rect2 = segunda.getBoundingClientRect();
-    const pontoMedioX = ((rect1.left + rect1.width / 2) + (rect2.left + rect2.width / 2)) / 2;
-    const containerRect = painelExplicacao.parentElement.getBoundingClientRect();
-    const origemX = Math.max(0, Math.min(containerRect.width, pontoMedioX - containerRect.left));
+    const vazio = listaConceitos.querySelector(".lista-vazia");
+    if (vazio) vazio.remove();
 
-    painelExplicacao.style.transformOrigin = `${origemX}px top`;
+    const li = document.createElement("li");
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "item-conceito ativo";
+    botao.dataset.termo = item.termo;
+    botao.innerHTML = `<span>${item.termo}</span><small>Rever</small>`;
+
+    botao.addEventListener("click", () => {
+        exibirExplicacao(item, null, null);
+        marcarItemAtivoNoMenu(item.termo);
+    });
+
+    li.appendChild(botao);
+    listaConceitos.appendChild(li);
+    marcarItemAtivoNoMenu(item.termo);
+}
+
+function exibirExplicacao(dados, primeiraCarta, segundaCarta) {
+    const { termo, conceito, explicacao } = dados;
+
+    if (primeiraCarta && segundaCarta) {
+        primeiraCarta.classList.add("par-destaque");
+        segundaCarta.classList.add("par-destaque");
+
+        const rect1 = primeiraCarta.getBoundingClientRect();
+        const rect2 = segundaCarta.getBoundingClientRect();
+        const pontoMedioX = ((rect1.left + rect1.width / 2) + (rect2.left + rect2.width / 2)) / 2;
+        const containerRect = painelExplicacao.parentElement.getBoundingClientRect();
+        const origemX = Math.max(0, Math.min(containerRect.width, pontoMedioX - containerRect.left));
+        painelExplicacao.style.transformOrigin = `${origemX}px top`;
+
+        setTimeout(() => {
+            primeiraCarta.classList.remove("par-destaque");
+            segundaCarta.classList.remove("par-destaque");
+        }, 950);
+    } else {
+        painelExplicacao.style.transformOrigin = "center top";
+    }
+
     explicacaoBadge.textContent = termo;
     explicacaoTitulo.textContent = `${termo} — Par identificado!`;
     explicacaoConceito.textContent = `Conceito: ${conceito}`;
     explicacaoTexto.textContent = explicacao;
 
-    // 3. Revela e expande o painel
     painelExplicacao.classList.remove("oculto");
     requestAnimationFrame(() => {
         painelExplicacao.classList.add("expandido");
         painelExplicacao.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
+}
 
-    // 4. Retorna as cartas ao tamanho normal após a transição de guia
-    setTimeout(() => {
-        primeira.classList.remove("par-destaque");
-        segunda.classList.remove("par-destaque");
-    }, 950);
+function gerarFeedbackDesempenho(totalTentativas, totalPares) {
+    if (totalTentativas <= totalPares + 4) {
+        return {
+            selo: "Excelente domínio",
+            titulo: "Desempenho muito forte!",
+            texto: `Você fechou em ${totalTentativas} tentativas. Continue reforçando a diferença entre barramentos (ADDRESSBUS vs. DATABUS) e memórias voláteis (RAM/CACHE) vs. não voláteis (ROM) revisando pelo menu lateral.`
+        };
+    }
+    if (totalTentativas <= totalPares * 2) {
+        return {
+            selo: "Bom progresso",
+            titulo: "Como melhorar na próxima rodada",
+            texto: `Você precisou de ${totalTentativas} tentativas. Tente agrupar mentalmente os termos por função (processamento: CPU, ULA, UC, REGISTRADORES; memória e barramento) antes de virar as cartas.`
+        };
+    }
+    return {
+        selo: "Em evolução",
+        titulo: "Dica para reduzir as tentativas",
+        texto: `Você concluiu em ${totalTentativas} tentativas. Use o menu lateral para reler cada conceito assim que encontrá-lo e associe palavras-chave curtas (ex.: "volátil" para RAM, "unidirecional" para ADDRESSBUS).`
+    };
+}
+
+function mostrarSumarioFinal() {
+    const totalPares = paresTermos.length;
+    const precisao = Math.round((totalPares / tentativas) * 100);
+    const feedback = gerarFeedbackDesempenho(tentativas, totalPares);
+
+    resumoSelo.textContent = feedback.selo;
+    resumoAcertos.textContent = `${acertos} de ${totalPares}`;
+    resumoTentativas.textContent = tentativas;
+    resumoPrecisao.textContent = `${precisao}%`;
+    feedbackTitulo.textContent = feedback.titulo;
+    feedbackTexto.textContent = feedback.texto;
+
+    painelResumo.classList.remove("oculto");
+    painelResumo.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function iniciarJogo() {
     tabuleiro.innerHTML = "";
+    listaConceitos.innerHTML = `<li class="lista-vazia">Nenhum par encontrado ainda.</li>`;
+    paresDesbloqueados = [];
+
     cartasViradas = [];
     bloqueioTabuleiro = false;
     acertos = 0;
@@ -167,6 +253,7 @@ function iniciarJogo() {
 
     painelExplicacao.classList.remove("expandido");
     painelExplicacao.classList.add("oculto");
+    painelResumo.classList.add("oculto");
     atualizarPlacar();
 
     const baralho = criarBaralho();
@@ -216,8 +303,21 @@ function verificarPar() {
         segunda.classList.add("encontrada");
         acertos++;
         atualizarPlacar();
-        expandirExplicacaoGuiada(primeira, segunda);
+
+        const dadosPar = {
+            id: Number(primeira.dataset.id),
+            termo: primeira.dataset.termo,
+            conceito: primeira.dataset.conceito,
+            explicacao: primeira.dataset.explicacao
+        };
+
+        adicionarNoMenuLateral(dadosPar);
+        exibirExplicacao(dadosPar, primeira, segunda);
         cartasViradas = [];
+
+        if (acertos === paresTermos.length) {
+            setTimeout(mostrarSumarioFinal, 700);
+        }
     } else {
         bloqueioTabuleiro = true;
         setTimeout(() => {
@@ -230,5 +330,6 @@ function verificarPar() {
 }
 
 btnReiniciar.addEventListener("click", iniciarJogo);
+btnJogarNovamente.addEventListener("click", iniciarJogo);
 
 iniciarJogo();
