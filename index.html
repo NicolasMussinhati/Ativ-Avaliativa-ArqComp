@@ -19,7 +19,16 @@
                     <span>Acertos: <strong id="contador-acertos">0 de 12 pares</strong></span>
                     <span>Tentativas: <strong id="contador-tentativas">0</strong></span>
                 </div>
-                <button id="btn-reiniciar" type="button">Reiniciar</button>
+
+                <div class="controles-direita">
+                    <label for="seletor-dificuldade" class="rotulo-dificuldade">Dificuldade:</label>
+                    <select id="seletor-dificuldade" aria-label="Selecionar dificuldade">
+                        <option value="facil">Fácil (8 pares · 16 cartas)</option>
+                        <option value="medio" selected>Médio (12 pares · 24 cartas)</option>
+                        <option value="dificil">Difícil (16 pares · 32 cartas)</option>
+                    </select>
+                    <button id="btn-reiniciar" type="button">Reiniciar</button>
+                </div>
             </section>
 
             <section id="painel-explicacao" class="explicacao-box oculto" aria-live="polite">
