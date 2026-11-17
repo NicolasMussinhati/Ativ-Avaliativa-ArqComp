@@ -74,29 +74,84 @@ body {
     background-color: #7dd3fc;
 }
 
+/* Painel de explicação com expansão guiada */
 .explicacao-box {
-    background-color: #064e3b;
-    border: 1px solid #10b981;
-    border-radius: 10px;
-    padding: 14px 18px;
+    position: relative;
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    border: 1px solid #34d399;
+    border-radius: 12px;
+    padding: 16px 20px;
     margin-bottom: 18px;
-    transition: opacity 0.2s ease;
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.22);
+    transform-origin: top center;
+    opacity: 0;
+    transform: scaleY(0.85) translateY(-10px);
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.35s ease,
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        max-height 0.45s ease,
+        padding 0.35s ease,
+        margin-bottom 0.35s ease;
 }
 
 .explicacao-box.oculto {
-    display: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-width: 0;
+}
+
+.explicacao-box.expandido {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+    max-height: 280px;
+    pointer-events: auto;
+}
+
+.explicacao-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 8px;
+}
+
+.badge-termo {
+    background-color: #10b981;
+    color: #022c22;
+    font-weight: 800;
+    font-size: 0.78rem;
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+}
+
+.guia-seta {
+    font-size: 0.82rem;
+    color: #a7f3d0;
+    font-weight: 600;
 }
 
 .explicacao-box h2 {
-    font-size: 1rem;
-    color: #6ee7b7;
-    margin-bottom: 4px;
+    font-size: 1.05rem;
+    color: #ecfdf5;
+    margin-bottom: 6px;
 }
 
-.explicacao-box p {
+.explicacao-conceito {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #6ee7b7;
+    margin-bottom: 6px;
+}
+
+.explicacao-box p:last-child {
     font-size: 0.95rem;
     color: #ecfdf5;
-    line-height: 1.4;
+    line-height: 1.45;
 }
 
 .tabuleiro {
@@ -110,6 +165,7 @@ body {
     height: 120px;
     perspective: 1000px;
     cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
 }
 
 .carta-interna {
@@ -167,9 +223,16 @@ body {
     word-break: break-word;
 }
 
+/* Destaque de expansão ao acertar o par */
+.carta.par-destaque {
+    z-index: 5;
+    transform: scale(1.08) translateY(-6px);
+    box-shadow: 0 14px 28px rgba(16, 185, 129, 0.38);
+}
+
 .carta.encontrada .carta-verso {
     background-color: #065f46;
-    border-color: #10b981;
+    border-color: #34d399;
 }
 
 @media (max-width: 900px) {
