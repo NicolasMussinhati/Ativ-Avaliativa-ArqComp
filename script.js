@@ -3,7 +3,7 @@ const paresTermos = [
         id: 1,
         termo: "CPU",
         conceito: "Cérebro do computador que interpreta e executa instruções.",
-        explicacao: "A CPU (Unidade Central de Processamento) coordena as operações do sistema, buscando, decodificando e executando instruções dos programas."
+        explicacao: "A CPU coordena as operações do sistema, buscando, decodificando e executando instruções dos programas."
     },
     {
         id: 2,
@@ -15,7 +15,7 @@ const paresTermos = [
         id: 3,
         termo: "UC",
         conceito: "Gerencia o fluxo de dados e busca instruções na memória.",
-        explicacao: "A Unidade de Controle (UC) orquestra os sinais internos do processador, garantindo que cada instrução ocorra na ordem certa."
+        explicacao: "A UC orquestra os sinais internos do processador, garantindo que cada instrução ocorra na ordem certa."
     },
     {
         id: 4,
@@ -51,7 +51,7 @@ const paresTermos = [
         id: 9,
         termo: "DMA",
         conceito: "Permite periféricos transferirem dados sem sobrecarregar o processador.",
-        explicacao: "O Acesso Direto à Memória (DMA) libera a CPU de gerenciar transferências repetitivas entre dispositivos de E/S e a RAM."
+        explicacao: "O DMA libera a CPU de gerenciar transferências repetitivas entre dispositivos de E/S e a RAM."
     },
     {
         id: 10,
@@ -77,7 +77,9 @@ const tabuleiro = document.getElementById("tabuleiro");
 const contadorAcertos = document.getElementById("contador-acertos");
 const contadorTentativas = document.getElementById("contador-tentativas");
 const painelExplicacao = document.getElementById("painel-explicacao");
+const explicacaoBadge = document.getElementById("explicacao-badge");
 const explicacaoTitulo = document.getElementById("explicacao-titulo");
+const explicacaoConceito = document.getElementById("explicacao-conceito");
 const explicacaoTexto = document.getElementById("explicacao-texto");
 const btnReiniciar = document.getElementById("btn-reiniciar");
 
@@ -102,6 +104,7 @@ function criarBaralho() {
             tipo: "termo",
             conteudo: item.termo,
             termo: item.termo,
+            conceito: item.conceito,
             explicacao: item.explicacao
         });
         baralho.push({
@@ -109,6 +112,7 @@ function criarBaralho() {
             tipo: "conceito",
             conteudo: item.conceito,
             termo: item.termo,
+            conceito: item.conceito,
             explicacao: item.explicacao
         });
     });
@@ -120,10 +124,38 @@ function atualizarPlacar() {
     contadorTentativas.textContent = tentativas;
 }
 
-function exibirExplicacao(termo, texto) {
-    explicacaoTitulo.textContent = `Par encontrado: ${termo}`;
-    explicacaoTexto.textContent = texto;
+function expandirExplicacaoGuiada(primeira, segunda) {
+    const { termo, conceito, explicacao } = primeira.dataset;
+
+    // 1. Expande as duas cartas do par encontrado
+    primeira.classList.add("par-destaque");
+    segunda.classList.add("par-destaque");
+
+    // 2. Define origem da expansão próxima ao ponto médio entre as duas cartas
+    const rect1 = primeira.getBoundingClientRect();
+    const rect2 = segunda.getBoundingClientRect();
+    const pontoMedioX = ((rect1.left + rect1.width / 2) + (rect2.left + rect2.width / 2)) / 2;
+    const containerRect = painelExplicacao.parentElement.getBoundingClientRect();
+    const origemX = Math.max(0, Math.min(containerRect.width, pontoMedioX - containerRect.left));
+
+    painelExplicacao.style.transformOrigin = `${origemX}px top`;
+    explicacaoBadge.textContent = termo;
+    explicacaoTitulo.textContent = `${termo} — Par identificado!`;
+    explicacaoConceito.textContent = `Conceito: ${conceito}`;
+    explicacaoTexto.textContent = explicacao;
+
+    // 3. Revela e expande o painel
     painelExplicacao.classList.remove("oculto");
+    requestAnimationFrame(() => {
+        painelExplicacao.classList.add("expandido");
+        painelExplicacao.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    // 4. Retorna as cartas ao tamanho normal após a transição de guia
+    setTimeout(() => {
+        primeira.classList.remove("par-destaque");
+        segunda.classList.remove("par-destaque");
+    }, 950);
 }
 
 function iniciarJogo() {
@@ -132,6 +164,8 @@ function iniciarJogo() {
     bloqueioTabuleiro = false;
     acertos = 0;
     tentativas = 0;
+
+    painelExplicacao.classList.remove("expandido");
     painelExplicacao.classList.add("oculto");
     atualizarPlacar();
 
@@ -143,6 +177,7 @@ function iniciarJogo() {
         carta.dataset.id = dadosCarta.id;
         carta.dataset.tipo = dadosCarta.tipo;
         carta.dataset.termo = dadosCarta.termo;
+        carta.dataset.conceito = dadosCarta.conceito;
         carta.dataset.explicacao = dadosCarta.explicacao;
 
         carta.innerHTML = `
@@ -181,7 +216,7 @@ function verificarPar() {
         segunda.classList.add("encontrada");
         acertos++;
         atualizarPlacar();
-        exibirExplicacao(primeira.dataset.termo, primeira.dataset.explicacao);
+        expandirExplicacaoGuiada(primeira, segunda);
         cartasViradas = [];
     } else {
         bloqueioTabuleiro = true;
