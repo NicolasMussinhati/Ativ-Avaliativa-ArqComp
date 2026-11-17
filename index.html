@@ -8,7 +8,7 @@
 </head>
 <body>
     <header class="cabecalho">
-        <h1>JOGO DA MEMÓRIA COMPUTACIONAL!</h1>
+        <h1>Memória de Arquitetura Computacional</h1>
         <p>Combine cada termo técnico ao seu conceito ou importância.</p>
     </header>
 
@@ -22,7 +22,12 @@
         </section>
 
         <section id="painel-explicacao" class="explicacao-box oculto" aria-live="polite">
+            <div class="explicacao-topo">
+                <span id="explicacao-badge" class="badge-termo">TERMO</span>
+                <span class="guia-seta">↓ Explicação do par</span>
+            </div>
             <h2 id="explicacao-titulo">Par encontrado!</h2>
+            <p id="explicacao-conceito" class="explicacao-conceito"></p>
             <p id="explicacao-texto"></p>
         </section>
 
