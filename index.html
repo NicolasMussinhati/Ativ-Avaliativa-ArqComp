@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memória ArqComp — Arquitetura Computacional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="cabecalho">
+        <h1>Memória de Arquitetura Computacional</h1>
+        <p>Combine cada termo técnico ao seu conceito ou importância.</p>
+    </header>
+
+    <main class="container">
+        <section class="painel-controle">
+            <div class="status">
+                <span>Acertos: <strong id="contador-acertos">0 de 12 pares</strong></span>
+                <span>Tentativas: <strong id="contador-tentativas">0</strong></span>
+            </div>
+            <button id="btn-reiniciar" type="button">Reiniciar</button>
+        </section>
+
+        <section id="painel-explicacao" class="explicacao-box oculto" aria-live="polite">
+            <h2 id="explicacao-titulo">Par encontrado!</h2>
+            <p id="explicacao-texto"></p>
+        </section>
+
+        <section id="tabuleiro" class="tabuleiro" aria-label="Tabuleiro do jogo da memória"></section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
