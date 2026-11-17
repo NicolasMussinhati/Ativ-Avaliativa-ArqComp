@@ -12,27 +12,66 @@
         <p>Combine cada termo técnico ao seu conceito ou importância.</p>
     </header>
 
-    <main class="container">
-        <section class="painel-controle">
-            <div class="status">
-                <span>Acertos: <strong id="contador-acertos">0 de 12 pares</strong></span>
-                <span>Tentativas: <strong id="contador-tentativas">0</strong></span>
-            </div>
-            <button id="btn-reiniciar" type="button">Reiniciar</button>
-        </section>
+    <div class="layout-principal">
+        <main class="container">
+            <section class="painel-controle">
+                <div class="status">
+                    <span>Acertos: <strong id="contador-acertos">0 de 12 pares</strong></span>
+                    <span>Tentativas: <strong id="contador-tentativas">0</strong></span>
+                </div>
+                <button id="btn-reiniciar" type="button">Reiniciar</button>
+            </section>
 
-        <section id="painel-explicacao" class="explicacao-box oculto" aria-live="polite">
-            <div class="explicacao-topo">
-                <span id="explicacao-badge" class="badge-termo">TERMO</span>
-                <span class="guia-seta">↓ Explicação do par</span>
-            </div>
-            <h2 id="explicacao-titulo">Par encontrado!</h2>
-            <p id="explicacao-conceito" class="explicacao-conceito"></p>
-            <p id="explicacao-texto"></p>
-        </section>
+            <section id="painel-explicacao" class="explicacao-box oculto" aria-live="polite">
+                <div class="explicacao-topo">
+                    <span id="explicacao-badge" class="badge-termo">TERMO</span>
+                    <span class="guia-seta">↓ Explicação do par</span>
+                </div>
+                <h2 id="explicacao-titulo">Par encontrado!</h2>
+                <p id="explicacao-conceito" class="explicacao-conceito"></p>
+                <p id="explicacao-texto"></p>
+            </section>
 
-        <section id="tabuleiro" class="tabuleiro" aria-label="Tabuleiro do jogo da memória"></section>
-    </main>
+            <section id="painel-resumo" class="resumo-box oculto" aria-live="polite">
+                <div class="resumo-cabecalho">
+                    <h2>Fim de Jogo — Sumário de Desempenho</h2>
+                    <span id="resumo-selo" class="selo-desempenho">Concluído</span>
+                </div>
+                <div class="resumo-metricas">
+                    <div class="metrica-card">
+                        <span class="metrica-rotulo">Pares concluídos</span>
+                        <strong id="resumo-acertos">12 de 12</strong>
+                    </div>
+                    <div class="metrica-card">
+                        <span class="metrica-rotulo">Tentativas totais</span>
+                        <strong id="resumo-tentativas">0</strong>
+                    </div>
+                    <div class="metrica-card">
+                        <span class="metrica-rotulo">Aproveitamento</span>
+                        <strong id="resumo-precisao">0%</strong>
+                    </div>
+                </div>
+                <div class="resumo-feedback">
+                    <h3 id="feedback-titulo">Como melhorar</h3>
+                    <p id="feedback-texto"></p>
+                </div>
+                <button id="btn-jogar-novamente" type="button">Jogar Novamente</button>
+            </section>
+
+            <section id="tabuleiro" class="tabuleiro" aria-label="Tabuleiro do jogo da memória"></section>
+        </main>
+
+        <aside class="menu-lateral" aria-label="Conceitos desbloqueados">
+            <div class="menu-lateral-topo">
+                <h2>Conceitos Desbloqueados</h2>
+                <span id="contador-lateral">0/12</span>
+            </div>
+            <p class="menu-lateral-dica">Clique em um termo encontrado para rever a explicação.</p>
+            <ul id="lista-conceitos" class="lista-conceitos">
+                <li class="lista-vazia">Nenhum par encontrado ainda.</li>
+            </ul>
+        </aside>
+    </div>
 
     <script src="script.js"></script>
 </body>
