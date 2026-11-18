@@ -3,7 +3,7 @@
 Jogo da memória interativo desenvolvido em HTML, CSS e JavaScript puros para fixação dos conceitos fundamentais de Arquitetura Computacional.
 
 ## Link do Site Publicado
-https://SEU-USUARIO.github.io/arqcomp-cruzadinha/
+https://nicolasmussinhati.github.io/Ativ-Avaliativa-ArqComp/
 
 ## Como Jogar
 1. Selecione a dificuldade desejada no menu superior (Fácil com 8 pares, Médio com 12 pares ou Difícil com 16 pares).
