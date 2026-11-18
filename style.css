@@ -189,7 +189,7 @@ body {
     line-height: 1.45;
 }
 
-/* Sumário de desempenho ao fim do jogo */
+/* Sumário de desempenho ao fim do jogo com animação de vitória */
 .resumo-box {
     background-color: #1e293b;
     border: 1px solid #38bdf8;
@@ -197,6 +197,16 @@ body {
     padding: 20px;
     margin-bottom: 18px;
     box-shadow: 0 14px 30px rgba(15, 23, 42, 0.45);
+    
+    /* Configuração da animação de vitória */
+    opacity: 0;
+    transform: scale(0.9) translateY(15px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.resumo-box.visivel {
+    opacity: 1;
+    transform: scale(1) translateY(0);
 }
 
 .resumo-cabecalho {

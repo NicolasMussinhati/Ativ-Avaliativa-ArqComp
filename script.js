@@ -277,6 +277,10 @@ function mostrarSumarioFinal() {
     feedbackTexto.textContent = feedback.texto;
 
     painelResumo.classList.remove("oculto");
+    requestAnimationFrame(() => {
+        painelResumo.classList.add("visivel");
+    });
+
     painelResumo.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
@@ -296,7 +300,10 @@ function iniciarJogo() {
 
     painelExplicacao.classList.remove("expandido");
     painelExplicacao.classList.add("oculto");
+    
+    painelResumo.classList.remove("visivel");
     painelResumo.classList.add("oculto");
+    
     atualizarPlacar();
 
     const baralho = criarBaralho();
@@ -344,7 +351,6 @@ function verificarPar() {
     bloqueioTabuleiro = true;
 
     if (mesmoId && tiposDiferentes) {
-        // EFEITO DE ACERTO: Animação de pulso verde nas cartas
         primeira.classList.add("encontrada");
         segunda.classList.add("encontrada");
         acertos++;
@@ -359,7 +365,6 @@ function verificarPar() {
 
         adicionarNoMenuLateral(dadosPar);
         
-        // Tempo estendido de leitura (1.8 segundos) antes de liberar o tabuleiro
         setTimeout(() => {
             exibirExplicacao(dadosPar, primeira, segunda);
             cartasViradas = [];
@@ -371,11 +376,9 @@ function verificarPar() {
         }, 1800);
 
     } else {
-        // EFEITO DE ERRO: Adiciona classe de erro para disparar a animação de vibração (shake) em tom vermelho
         primeira.classList.add("erro");
         segunda.classList.add("erro");
 
-        // Tempo estendido para o usuário ler o erro (1.8 segundos) antes de desvirar
         setTimeout(() => {
             primeira.classList.remove("virada", "erro");
             segunda.classList.remove("virada", "erro");
