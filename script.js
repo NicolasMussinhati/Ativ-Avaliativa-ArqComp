@@ -225,7 +225,7 @@ function exibirExplicacao(dados, primeiraCarta, segundaCarta) {
         setTimeout(() => {
             primeiraCarta.classList.remove("par-destaque");
             segundaCarta.classList.remove("par-destaque");
-        }, 950);
+        }, 1200);
     } else {
         painelExplicacao.style.transformOrigin = "center top";
     }
@@ -254,13 +254,13 @@ function gerarFeedbackDesempenho(totalTentativas, totalPares) {
         return {
             selo: "Bom progresso",
             titulo: "Como melhorar na próxima rodada",
-            texto: `Você precisou de ${totalTentativas} tentativas em ${totalPares} pares. Agrupe os termos por função (CPU/ULA/UC/REGISTRADORES, memórias, barramentos, núcleos) antes de virar as cartas.`
+            texto: `Você precisou de ${totalTentativas} tentativas em ${totalPares} pares. Agrupe os termos por função antes de virar as cartas.`
         };
     }
     return {
         selo: "Em evolução",
         titulo: "Dica para reduzir as tentativas",
-        texto: `Você concluiu em ${totalTentativas} tentativas. Releia os conceitos no menu lateral assim que os descobrir e associe palavras-chave curtas a cada sigla.`
+        texto: `Você concluiu em ${totalTentativas} tentativas. Releia os conceitos no menu lateral assim que os descobrir para fixar melhor.`
     };
 }
 
@@ -341,7 +341,10 @@ function verificarPar() {
     const mesmoId = primeira.dataset.id === segunda.dataset.id;
     const tiposDiferentes = primeira.dataset.tipo !== segunda.dataset.tipo;
 
+    bloqueioTabuleiro = true;
+
     if (mesmoId && tiposDiferentes) {
+        // EFEITO DE ACERTO: Animação de pulso verde nas cartas
         primeira.classList.add("encontrada");
         segunda.classList.add("encontrada");
         acertos++;
@@ -355,20 +358,30 @@ function verificarPar() {
         };
 
         adicionarNoMenuLateral(dadosPar);
-        exibirExplicacao(dadosPar, primeira, segunda);
-        cartasViradas = [];
-
-        if (acertos === paresAtivos.length) {
-            setTimeout(mostrarSumarioFinal, 700);
-        }
-    } else {
-        bloqueioTabuleiro = true;
+        
+        // Tempo estendido de leitura (1.8 segundos) antes de liberar o tabuleiro
         setTimeout(() => {
-            primeira.classList.remove("virada");
-            segunda.classList.remove("virada");
+            exibirExplicacao(dadosPar, primeira, segunda);
             cartasViradas = [];
             bloqueioTabuleiro = false;
-        }, 1100);
+
+            if (acertos === paresAtivos.length) {
+                setTimeout(mostrarSumarioFinal, 800);
+            }
+        }, 1800);
+
+    } else {
+        // EFEITO DE ERRO: Adiciona classe de erro para disparar a animação de vibração (shake) em tom vermelho
+        primeira.classList.add("erro");
+        segunda.classList.add("erro");
+
+        // Tempo estendido para o usuário ler o erro (1.8 segundos) antes de desvirar
+        setTimeout(() => {
+            primeira.classList.remove("virada", "erro");
+            segunda.classList.remove("virada", "erro");
+            cartasViradas = [];
+            bloqueioTabuleiro = false;
+        }, 1800);
     }
 }
 
